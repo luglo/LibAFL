@@ -99,6 +99,7 @@ where
     ) -> Result<(), Error> {
         // Find a testcase to work on, unless someone already set it
         self.current_corpus_idx = Some(if let Some(corpus_idx) = self.current_corpus_idx {
+            self.psh.initialized = true;
             corpus_idx
         } else {
             fuzzer.scheduler().next(state)?
@@ -175,6 +176,7 @@ where
             .post_exec(state, self.stage_idx, Some(self.testcases_done))?;
         mark_feature_time!(state, PerfFeature::MutatePostExec);
         self.testcases_done += 1;
+        *state.executions_mut() +=1;
 
         Ok(())
     }
